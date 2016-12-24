@@ -65,7 +65,7 @@ while :; do
 				 echo "liste user $i"
 				 if [ -f /home/$i/.rtorrent.rc ]; then
 				 	sed -i -e '/upload_rate/d' -e '/^download_rate/d' -e '/max_downloads_global/d' /home/$i/.rtorrent.rc
-				 	echo -e "download_rate = 0\nupload_rate = 0"\nmax_downloads_global = 10" >> /home/$i/.rtorrent.rc
+				 	echo -e "download_rate = 0\nupload_rate = 0\nmax_downloads_global = 10" >> /home/$i/.rtorrent.rc
 				 	rm -f /var/www/rutorrent/conf/users/$i/access.ini
 				 	service $i-rtorrent restart
 				fi
