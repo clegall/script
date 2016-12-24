@@ -8,8 +8,8 @@ CGREEN="${CSI}1;32m"
 CYELLOW="${CSI}1;33m"
 CBLUE="${CSI}1;34m"
 
-DOWN="15000"
-UP="1000"
+DOWN="0"
+UP="0"
 FILE=$(ls /home/*/.rtorrent.rc)
 USER=$(awk -F: '($3 >= 1000) && ($3 <= 60000) {print $1}' /etc/passwd)
 
@@ -51,8 +51,8 @@ while :; do
 			for i in $USER ; do
 				echo "liste user $i"
 				if [ -f /home/$i/.rtorrent.rc ]; then
-					sed -i -e '/upload_rate/d' -e '/^download_rate/d' /home/$i/.rtorrent.rc
-					echo -e "download_rate = $DOWN\nupload_rate = $UP" >> /home/$i/.rtorrent.rc
+					sed -i -e '/upload_rate/d' -e '/^download_rate/d' -e '/pieces.memory.max.set/d' -e '/max_downloads_global/d' -e '/network.http.max_open.set/d' -e '/network.max_open_files.set/d' /home/$i/.rtorrent.rc
+					echo -e "pieces.memory.max.set = 1024M\nnetwork.http.max_open.set = 16\nnetwork.max_open_files.set = 128\nmax_downloads_global = 2" >> /home/$i/.rtorrent.rc
 					cp -f /tmp/access.ini /var/www/rutorrent/conf/users/$i/
 					chown www-data:www-data /var/www/rutorrent/conf/users/$i/access.ini
 					service $i-rtorrent restart
@@ -64,8 +64,8 @@ while :; do
 			for i in $USER ; do
 				 echo "liste user $i"
 				 if [ -f /home/$i/.rtorrent.rc ]; then
-				 	sed -i -e '/upload_rate/d' -e '/^download_rate/d' /home/$i/.rtorrent.rc
-				 	echo -e "download_rate = 0\nupload_rate = 0" >> /home/$i/.rtorrent.rc
+				 	sed -i -e '/upload_rate/d' -e '/^download_rate/d' -e '/max_downloads_global/d' /home/$i/.rtorrent.rc
+				 	echo -e "download_rate = 0\nupload_rate = 0"\nmax_downloads_global = 10" >> /home/$i/.rtorrent.rc
 				 	rm -f /var/www/rutorrent/conf/users/$i/access.ini
 				 	service $i-rtorrent restart
 				fi
