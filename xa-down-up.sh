@@ -11,6 +11,8 @@ CBLUE="${CSI}1;34m"
 
 FILE=$(ls /home/*/.rtorrent.rc)
 USER=$(awk -F: '($3 >= 1000) && ($3 <= 60000) {print $1}' /etc/passwd)
+LOPT="pieces.memory.max.set network.http.max_open.set network.max_open_files.set max_downloads_global"
+
 
 DOWNUP()
 {
@@ -31,6 +33,14 @@ DOWNUPZ()
 	 	rm -f /var/www/rutorrent/conf/users/$1/access.ini
 	 	service $1-rtorrent restart
 	fi
+}
+
+LUSER()
+{
+	for i in $USER ; do
+				 echo "liste des users : $i"
+				 DOWNUPZ "$i"
+			done
 }
 
 clear
@@ -54,8 +64,9 @@ while :; do
 	echo -e "${CBLUE}   1) Sauvegarde de rtorrent.rc en rtorrent.rc-save${CEND}"
 	echo -e "${CBLUE}   2) Modifie la bande passante et bloque les options${CEND}"
 	echo -e "${CBLUE}   3) Rétablie la connexion en illimité${CEND}"
-	echo -e "${CBLUE}   4) Sortir${CEND}"
-	read -p "$(echo -e ${CYELLOW}Choisir une option [1-4]: ${CEND})" option
+	echo -e "${CBLUE}   4) Option en supplement rtorrent.rc${CEND}"
+	echo -e "${CBLUE}   0) Sortir${CEND}"
+	read -p "$(echo -e ${CYELLOW}Choisir une option [0-4]: ${CEND})" option
 
 	case $option in
 		1)
@@ -103,6 +114,20 @@ while :; do
 		;;
 
 		4)
+			echo -e "${CBLUE}liste des options :${CEND}"
+			for i in $LOPT ; do
+				read -p "$(echo -e "${CYELLOW} $i : ${CEND}")" -e -i 10 RES
+					for a in $USER ; do
+				 		echo "liste des users : $a"
+						sed -i -e "/$i/d"  "/home/$a/.rtorrent.rc"
+						echo -e "$i" = "$RES" >> "/home/$a/.rtorrent.rc"
+						echo "$i" = "$RES" dans "/home/$a/.rtorrent.rc"
+						service "$a"-rtorrent restart
+					done
+			done
+		;;
+
+		0)
 			exit 0
 		;;
 
