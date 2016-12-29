@@ -61,11 +61,17 @@ ${CEND}"
 
 while :; do
 	echo -e "${CGREEN}Que veux tu faire?${CEND}"
+	echo ""
 	echo -e "${CBLUE}   1) Sauvegarde de rtorrent.rc en rtorrent.rc-save${CEND}"
+	echo "------------------------------------------------------------------"
 	echo -e "${CBLUE}   2) Modifie la bande passante et bloque les options${CEND}"
 	echo -e "${CBLUE}   3) Rétablie la connexion en illimité${CEND}"
+	echo "------------------------------------------------------------------"
 	echo -e "${CBLUE}   4) Option en supplement rtorrent.rc${CEND}"
+	echo "------------------------------------------------------------------"
 	echo -e "${CBLUE}   0) Sortir${CEND}"
+	echo ""
+
 	read -p "$(echo -e ${CYELLOW}Choisir une option [0-4]: ${CEND})" option
 
 	case $option in
